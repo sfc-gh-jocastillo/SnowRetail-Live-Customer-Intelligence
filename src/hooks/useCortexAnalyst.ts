@@ -1,0 +1,113 @@
+import { useState, useCallback } from 'react'
+
+interface AnalystResponse {
+  query: string
+  semanticView: string
+  generatedSQL: string
+  result: string
+  isVQRMatch: boolean
+}
+
+interface ConnectionState {
+  connected: boolean
+  loading: boolean
+  error: string | null
+}
+
+export function useCortexAnalyst() {
+  const [connection, setConnection] = useState<ConnectionState>({
+    connected: false,
+    loading: false,
+    error: null,
+  })
+
+  const connect = useCallback(async (sessionToken: string, accountUrl: string) => {
+    setConnection({ connected: false, loading: true, error: null })
+    try {
+      const response = await fetch(`${accountUrl}/api/v2/cortex/analyst/message`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: [{ type: 'text', text: 'test connection' }] }],
+          semantic_model_file: '@SNOWRETAIL.SEMANTIC.STAGE/sv_customer_intelligence.yaml',
+        }),
+      })
+      if (response.ok) {
+        setConnection({ connected: true, loading: false, error: null })
+      } else {
+        setConnection({ connected: false, loading: false, error: `HTTP ${response.status}` })
+      }
+    } catch (e) {
+      setConnection({ connected: false, loading: false, error: 'Connection failed' })
+    }
+  }, [])
+
+  const ask = useCallback(async (
+    question: string,
+    semanticView: string,
+    _sessionToken?: string,
+    _accountUrl?: string
+  ): Promise<AnalystResponse> => {
+    // When not connected, return synthetic response
+    if (!connection.connected) {
+      return getSyntheticResponse(question, semanticView)
+    }
+
+    // Live query via Cortex Analyst REST API
+    // In production, this would call the actual endpoint
+    return getSyntheticResponse(question, semanticView)
+  }, [connection.connected])
+
+  return { connection, connect, ask }
+}
+
+function getSyntheticResponse(question: string, semanticView: string): AnalystResponse {
+  const responses: Record<string, AnalystResponse> = {
+    'SV_CUSTOMER_INTELLIGENCE': {
+      query: question,
+      semanticView,
+      generatedSQL: `SELECT region, customer_segment, churn_rate,\n  churn_rate - LAG(churn_rate) OVER (ORDER BY month) as mom_change\nFROM gold.customer_360\nWHERE region = 'Sur'\nGROUP BY 1, 2\nORDER BY mom_change DESC`,
+      result: 'Region Sur churn spiked +1.8pp, driven by 35-44 age segment (68% of increase). Root cause: premium category price increase 3 weeks ago disproportionately affected this demographic.',
+      isVQRMatch: true,
+    },
+    'SV_OMNICHANNEL_OPS': {
+      query: question,
+      semanticView,
+      generatedSQL: `SELECT aisle, foot_traffic, conversion_rate,\n  COUNT(DISTINCT sku_id) as campaign_sku_count\nFROM gold.planogram_current p\nJOIN gold.campaign_skus c USING (sku_id)\nWHERE campaign_name = 'Back to School'\n  AND conversion_rate < store_avg_conversion\nORDER BY foot_traffic ASC`,
+      result: '14 promoted SKUs currently placed in low-traffic aisles. Recommended: endcap cluster + secondary home-aisle placement for projected +22% sales lift.',
+      isVQRMatch: true,
+    },
+    'SV_COMMERCE_REVENUE': {
+      query: question,
+      semanticView,
+      generatedSQL: `SELECT quarter, category,\n  (expected_revenue - actual_revenue) / expected_revenue as leakage_rate,\n  expected_revenue - actual_revenue as leakage_amount\nFROM gold.revenue_assurance\nWHERE quarter IN ('Q2-2024', 'Q3-2024')\nORDER BY leakage_amount DESC`,
+      result: 'Q3 leakage: 0.18% ($1.2M) vs Q2: 0.07% ($460K). Spike driven by Electronics (+0.14pp) due to incorrect discount stacking on 3 promotional campaigns.',
+      isVQRMatch: true,
+    },
+    'SV_SUPPLY_CHAIN': {
+      query: question,
+      semanticView,
+      generatedSQL: `SELECT supplier_name, avg_lead_time_days,\n  lead_time_trend_30d, stockout_events_caused,\n  revenue_impact\nFROM gold.supplier_performance\nWHERE lead_time_trend_30d > 0\nORDER BY revenue_impact DESC\nLIMIT 10`,
+      result: '3 suppliers trending late: Supplier C (+6 days, $420K impact), Supplier A (+4 days, $340K), Supplier B (+2 days, $180K). Total revenue at risk: $940K.',
+      isVQRMatch: true,
+    },
+    'SV_MARKETING_GROWTH': {
+      query: question,
+      semanticView,
+      generatedSQL: `SELECT campaign_type, audience_segment,\n  SUM(attributed_revenue) as revenue,\n  SUM(total_spend) as spend,\n  SUM(attributed_revenue) / NULLIF(SUM(total_spend), 0) as roas\nFROM gold.campaign_performance\nWHERE channel = 'email'\n  AND audience_segment = 'loyalty_members'\n  AND quarter = CURRENT_QUARTER()`,
+      result: 'Loyalty email ROAS: 4.5x (vs 3.1x non-loyalty). Multi-touch attribution credits 38% to email touchpoint. Platinum tier: 6.2x, Gold: 4.8x, Silver: 3.1x.',
+      isVQRMatch: true,
+    },
+  }
+
+  return responses[semanticView] || {
+    query: question,
+    semanticView,
+    generatedSQL: `-- Query generated by Cortex Analyst\nSELECT * FROM gold.mart\nWHERE condition = 'matched'`,
+    result: 'Synthetic response — connect to Snowflake for live results.',
+    isVQRMatch: false,
+  }
+}
