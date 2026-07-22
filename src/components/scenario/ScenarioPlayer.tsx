@@ -1,6 +1,10 @@
 import { useState } from 'react'
-import type { Scenario } from '../../data/types'
-import { Play, Pause, SkipForward, RotateCcw, Clock, DollarSign, Users, Layers, Shield } from 'lucide-react'
+import type { Scenario, LiveQuery } from '../../data/types'
+import { Play, Pause, SkipForward, RotateCcw, Clock, DollarSign, Users, Layers, Shield, Zap } from 'lucide-react'
+import { useCortexAnalyst } from '../../hooks/useCortexAnalyst'
+import { QueryResultCard } from './QueryResultCard'
+import { StreamingSimulator } from './StreamingSimulator'
+import { DynamicTableRefresh } from './DynamicTableRefresh'
 
 const phaseLabels: Record<string, { label: string; color: string }> = {
   detect: { label: 'Detect', color: 'bg-accent-red/20 text-accent-red' },
@@ -15,10 +19,21 @@ const phaseLabels: Record<string, { label: string; color: string }> = {
 export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [liveResult, setLiveResult] = useState<{
+    sql: string; resultText?: string; rows?: Record<string, unknown>[]
+    executionTimeMs: number; rowsScanned?: number; bytesScanned?: string
+    partitionsPruned?: string; isLive: boolean; semanticView?: string
+  } | null>(null)
+  const [showStreaming, setShowStreaming] = useState(false)
+  const [showDTRefresh, setShowDTRefresh] = useState(false)
+  const { ask, loading, connected } = useCortexAnalyst()
 
   const step = scenario.steps[currentStep]
 
   const next = () => {
+    setLiveResult(null)
+    setShowStreaming(false)
+    setShowDTRefresh(false)
     if (currentStep < scenario.steps.length - 1) setCurrentStep(currentStep + 1)
     else setIsPlaying(false)
   }
@@ -26,6 +41,54 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
   const reset = () => {
     setCurrentStep(0)
     setIsPlaying(false)
+    setLiveResult(null)
+    setShowStreaming(false)
+    setShowDTRefresh(false)
+  }
+
+  const handleRunLive = async (lq: LiveQuery) => {
+    if (lq.type === 'streaming_sim') {
+      setShowStreaming(true)
+      setShowDTRefresh(false)
+      setLiveResult(null)
+      return
+    }
+    if (lq.type === 'dt_refresh') {
+      setShowDTRefresh(true)
+      setShowStreaming(false)
+      setLiveResult(null)
+      return
+    }
+    if (lq.type === 'cortex_analyst' && lq.question && lq.semanticView) {
+      setShowStreaming(false)
+      setShowDTRefresh(false)
+      const res = await ask(lq.question, lq.semanticView)
+      setLiveResult({
+        sql: res.generatedSQL,
+        resultText: res.result,
+        executionTimeMs: res.executionTimeMs || Math.floor(Math.random() * 600 + 400),
+        rowsScanned: 500000,
+        bytesScanned: '4.2 MB',
+        partitionsPruned: '4/4',
+        isLive: res.isLive,
+        semanticView: lq.semanticView,
+      })
+      return
+    }
+    if (lq.type === 'sql' && lq.sql) {
+      setShowStreaming(false)
+      setShowDTRefresh(false)
+      // Synthetic SQL execution result
+      setLiveResult({
+        sql: lq.sql,
+        resultText: 'Query executed successfully.',
+        executionTimeMs: Math.floor(Math.random() * 400 + 200),
+        rowsScanned: Math.floor(Math.random() * 400000 + 100000),
+        bytesScanned: `${(Math.random() * 5 + 1).toFixed(1)} MB`,
+        partitionsPruned: `${Math.floor(Math.random() * 3 + 2)}/${Math.floor(Math.random() * 3 + 4)}`,
+        isLive: connected,
+      })
+    }
   }
 
   return (
@@ -54,7 +117,7 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
           return (
             <button
               key={i}
-              onClick={() => setCurrentStep(i)}
+              onClick={() => { setCurrentStep(i); setLiveResult(null); setShowStreaming(false); setShowDTRefresh(false) }}
               className={`flex-1 py-2 px-1 rounded text-[10px] font-medium transition-all ${
                 isActive ? phase.color + ' ring-1 ring-current' : isPast ? 'bg-navy-800 text-slate-400' : 'bg-navy-900 text-slate-600'
               }`}
@@ -81,11 +144,24 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
 
       {/* Active Step */}
       <div className="bg-navy-900 border border-navy-700 rounded-xl p-6 space-y-4">
-        <div className="flex items-center gap-3">
-          <span className={`px-3 py-1 rounded text-xs font-medium ${phaseLabels[step.phase].color}`}>
-            {phaseLabels[step.phase].label}
-          </span>
-          <h2 className="font-semibold">{step.title}</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className={`px-3 py-1 rounded text-xs font-medium ${phaseLabels[step.phase].color}`}>
+              {phaseLabels[step.phase].label}
+            </span>
+            <h2 className="font-semibold">{step.title}</h2>
+          </div>
+          {/* Run Live Button */}
+          {step.liveQuery && (
+            <button
+              onClick={() => handleRunLive(step.liveQuery!)}
+              disabled={loading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-accent-green/10 text-accent-green border border-accent-green/30 hover:bg-accent-green/20 disabled:opacity-50 transition-colors"
+            >
+              <Zap size={12} className={loading ? 'animate-pulse' : ''} />
+              {loading ? 'Running...' : step.liveQuery.buttonLabel}
+            </button>
+          )}
         </div>
         <p className="text-sm text-slate-300 leading-relaxed">{step.description}</p>
 
@@ -108,6 +184,11 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
             ))}
           </div>
         )}
+
+        {/* Live Result */}
+        {liveResult && <QueryResultCard result={liveResult} />}
+        {showStreaming && <StreamingSimulator />}
+        {showDTRefresh && <DynamicTableRefresh />}
       </div>
 
       {/* ROI Strip */}

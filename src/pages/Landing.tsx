@@ -53,7 +53,7 @@ export function Landing() {
         </div>
         <h1 className="text-3xl md:text-4xl font-bold leading-tight">
           Agentic AI across the entire retail stack —<br />
-          <span className="text-gold-400">measured in minutes, dollars, and customer outcomes.</span>
+          <span className="text-sf-blue">measured in minutes, dollars, and customer outcomes.</span>
         </h1>
         <p className="text-slate-400 max-w-3xl mx-auto text-sm leading-relaxed">
           Five domains. One Snowflake-native data plane. Cortex Agents close the loop end-to-end —
@@ -77,15 +77,15 @@ export function Landing() {
       </section>
 
       {/* Semantic Layer Callout */}
-      <section className="bg-gradient-to-r from-navy-900 to-navy-800 border border-navy-700 rounded-xl p-6 flex items-center justify-between">
+      <section className="bg-gradient-to-r from-sf-blue/10 to-sf-blue/5 border border-sf-blue/20 rounded-xl p-6 flex items-center justify-between">
         <div className="space-y-2">
-          <div className="text-xs text-gold-400 uppercase tracking-wider font-medium">Powered by Snowflake Semantic Layer</div>
+          <div className="text-xs text-sf-blue uppercase tracking-wider font-medium">Powered by Snowflake Semantic Layer</div>
           <p className="text-sm text-slate-300 max-w-lg">
             Every KPI above is defined once in a Semantic View — the same governed definition powers dashboards,
             Cortex Agents, natural-language queries, and compliance evidence packs. Zero metric drift.
           </p>
         </div>
-        <Link to="/semantic-layer" className="flex items-center gap-1 px-4 py-2 bg-gold-500 text-navy-950 text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
+        <Link to="/semantic-layer" className="flex items-center gap-1 px-4 py-2 bg-sf-blue text-white text-sm font-medium rounded-lg hover:bg-sf-blue-light transition-colors">
           Explore <ArrowUpRight size={14} />
         </Link>
       </section>

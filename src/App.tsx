@@ -12,6 +12,7 @@ import { ScenarioDetail } from './pages/ScenarioDetail'
 import { Compliance } from './pages/Compliance'
 import { Tours } from './pages/Tours'
 import { Architecture } from './pages/Architecture'
+import { Customer360 } from './pages/Customer360'
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/compliance" element={<Compliance />} />
         <Route path="/tours" element={<Tours />} />
         <Route path="/architecture" element={<Architecture />} />
+        <Route path="/customer-360" element={<Customer360 />} />
       </Routes>
     </Shell>
   )

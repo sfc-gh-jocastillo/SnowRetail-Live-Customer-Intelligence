@@ -10,7 +10,7 @@ export const mktScenarios: Scenario[] = [
     role: 'Marketing Analytics Manager',
     trigger: 'Monthly marketing mix review shows paid search getting 80% attribution (suspected over-credit)',
     steps: [
-      { phase: 'detect', title: 'Attribution Bias Suspected', description: 'Last-click model credits 80% of conversions to paid search. CMO suspects upper-funnel channels (social, display) are under-valued.', primitives: ['Dynamic Tables'] },
+      { phase: 'detect', title: 'Attribution Bias Suspected', description: 'Last-click model credits 80% of conversions to paid search. CMO suspects upper-funnel channels (social, display) are under-valued.', primitives: ['Dynamic Tables'], liveQuery: { type: 'cortex_analyst', question: 'What is the average ROAS by channel?', semanticView: 'SV_MARKETING_GROWTH', buttonLabel: 'Query ROAS by Channel' } },
       { phase: 'observe', title: 'Journey Analysis', description: 'SV_MARKETING_GROWTH loads full customer journeys: avg 4.2 touchpoints before conversion. 78% had social or display exposure before search.', primitives: ['Semantic Views', 'Cortex Analyst'] },
       { phase: 'hypothesize', title: 'Model Comparison', description: 'Snowpark ML runs Shapley-value multi-touch attribution. Results: Social 28% (was 5%), Display 18% (was 8%), Search 35% (was 80%), Email 12%, Direct 7%.', primitives: ['Snowpark ML'] },
       { phase: 'plan', title: 'Budget Reallocation', description: 'Agent proposes budget shift: +15% social, +8% display, −20% paid search, +5% email. Projected: same conversions at −12% total spend.', primitives: ['Cortex Agent'] },
@@ -31,7 +31,7 @@ export const mktScenarios: Scenario[] = [
     role: 'CMO',
     trigger: 'Board meeting preparation — CMO needs defensible ROAS number for loyalty program investment case',
     steps: [
-      { phase: 'detect', title: 'NL Query', description: 'CMO asks: "What\'s the true ROAS of our loyalty email campaigns this quarter?" Cortex Analyst routes to SV_MARKETING_GROWTH.', semanticLayerNote: 'roas metric definition: attributed_revenue / total_campaign_spend. Uses multi-touch attribution, not last-click.', primitives: ['Cortex Analyst', 'Semantic Views'] },
+      { phase: 'detect', title: 'NL Query', description: 'CMO asks: "What\'s the true ROAS of our loyalty email campaigns this quarter?" Cortex Analyst routes to SV_MARKETING_GROWTH.', semanticLayerNote: 'roas metric definition: attributed_revenue / total_campaign_spend. Uses multi-touch attribution, not last-click.', primitives: ['Cortex Analyst', 'Semantic Views'], liveQuery: { type: 'cortex_analyst', question: 'What is the average ROAS for loyalty members by channel?', semanticView: 'SV_MARKETING_GROWTH', buttonLabel: 'Ask Cortex Analyst' } },
       { phase: 'observe', title: 'Result Delivered', description: 'Loyalty email ROAS: 4.5x (vs 3.1x non-loyalty audiences). Multi-touch attribution credits 38% of conversion value to email touchpoint, 28% to app push follow-up.', semanticLayerNote: 'Same governed ROAS number the board deck uses. No manual calculation, no "which spreadsheet is right?" meeting.', primitives: ['Cortex Analyst', 'Semantic Views'] },
       { phase: 'hypothesize', title: 'Segment Drill-Down', description: 'Follow-up: "Which loyalty tier drives highest ROAS?" → Platinum: 6.2x, Gold: 4.8x, Silver: 3.1x. Platinum over-indexes on high-margin categories.', primitives: ['Cortex Analyst'] },
       { phase: 'plan', title: 'Investment Case Built', description: 'Agent generates investment case: increasing loyalty email frequency for Platinum (+2 sends/month) projected to yield additional $420K revenue at 5.8x ROAS.', primitives: ['Cortex Agent'] },
@@ -73,7 +73,7 @@ export const mktScenarios: Scenario[] = [
     role: 'Brand Manager',
     trigger: 'AI_SENTIMENT detects 4x negative mention spike in last 2 hours',
     steps: [
-      { phase: 'detect', title: 'Sentiment Spike', description: 'Snowpipe Streaming ingests social mentions. AI_SENTIMENT scores: negative sentiment 4x above baseline in 2-hour window. Trend: accelerating.', primitives: ['Snowpipe Streaming', 'AISQL'] },
+      { phase: 'detect', title: 'Sentiment Spike', description: 'Snowpipe Streaming ingests social mentions. AI_SENTIMENT scores: negative sentiment 4x above baseline in 2-hour window. Trend: accelerating.', primitives: ['Snowpipe Streaming', 'AISQL'], liveQuery: { type: 'streaming_sim', buttonLabel: 'Show Social Stream' } },
       { phase: 'observe', title: 'Topic Extraction', description: 'AI_SUMMARIZE clusters mentions: 82% about delivery delay in Santiago (logistics incident), 12% about website error, 6% noise.', primitives: ['AISQL'] },
       { phase: 'hypothesize', title: 'Impact Assessment', description: 'Cortex Agent correlates: 1,400 deliveries delayed due to carrier system outage. Estimated 2,800 affected customers. Brand sentiment risk: moderate-high.', primitives: ['Cortex Agent'] },
       { phase: 'plan', title: 'Response Strategy', description: 'Agent proposes: acknowledge publicly within 30 min, proactive SMS to affected customers with new ETA, social response template, compensation offer.', primitives: ['Cortex Agent'] },

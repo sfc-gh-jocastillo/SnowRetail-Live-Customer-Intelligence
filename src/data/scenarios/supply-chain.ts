@@ -10,7 +10,7 @@ export const scoScenarios: Scenario[] = [
     role: 'Demand Planning Manager',
     trigger: 'Weekly forecast refresh for 45,000 SKU-store combinations',
     steps: [
-      { phase: 'detect', title: 'Forecast Refresh', description: 'Snowpark ML ensemble (XGBoost + Prophet + LSTM) generates 8-week demand forecast for 45K SKU-store combos. 2,400 show significant deviation from plan.', primitives: ['Snowpark ML'] },
+      { phase: 'detect', title: 'Forecast Refresh', description: 'Snowpark ML ensemble (XGBoost + Prophet + LSTM) generates 8-week demand forecast for 45K SKU-store combos. 2,400 show significant deviation from plan.', primitives: ['Snowpark ML'], liveQuery: { type: 'cortex_analyst', question: 'Which suppliers have the highest lead time trend in the last 30 days?', semanticView: 'SV_SUPPLY_CHAIN', buttonLabel: 'Query Forecast' } },
       { phase: 'observe', title: 'Deviation Analysis', description: 'SV_SUPPLY_CHAIN shows: 1,200 SKUs trending above plan (potential stockout), 1,200 below (potential overstock). Top 50 by revenue impact prioritized.', primitives: ['Semantic Views', 'Cortex Analyst'] },
       { phase: 'hypothesize', title: 'Driver Identification', description: 'Above-plan drivers: unseasonable weather (outdoor furniture +40%), social media viral trend (specific sneaker +300%). Below-plan: competitor launch, category fatigue.', primitives: ['AISQL', 'Cortex Search'] },
       { phase: 'plan', title: 'Replenishment Adjustment', description: 'Agent adjusts safety stock: increase for above-plan (expedited supplier orders), decrease for below-plan (cancel pending POs, redirect to markdown).', primitives: ['Cortex Agent'] },
@@ -31,7 +31,7 @@ export const scoScenarios: Scenario[] = [
     role: 'Supply Chain VP',
     trigger: 'VP preparing for quarterly supplier review, wants data-driven talking points',
     steps: [
-      { phase: 'detect', title: 'NL Query Initiated', description: 'VP asks: "Which suppliers are trending late and affecting stockouts?" Cortex Analyst routes to SV_SUPPLY_CHAIN.', semanticLayerNote: 'lead_time and stockout_rate metrics governed in SV — same definitions procurement, ops, and finance all use.', primitives: ['Cortex Analyst', 'Semantic Views'] },
+      { phase: 'detect', title: 'NL Query Initiated', description: 'VP asks: "Which suppliers are trending late and affecting stockouts?" Cortex Analyst routes to SV_SUPPLY_CHAIN.', semanticLayerNote: 'lead_time and stockout_rate metrics governed in SV — same definitions procurement, ops, and finance all use.', primitives: ['Cortex Analyst', 'Semantic Views'], liveQuery: { type: 'cortex_analyst', question: 'Which suppliers have the highest revenue impact from stockouts?', semanticView: 'SV_SUPPLY_CHAIN', buttonLabel: 'Ask Cortex Analyst' } },
       { phase: 'observe', title: 'Results Returned', description: '3 suppliers flagged: Supplier A (lead time +4 days trend, 12 stockout events), Supplier B (+2 days, 8 events), Supplier C (+6 days, 3 events but high-value).', semanticLayerNote: 'Stockout attribution to supplier uses governed join logic in Semantic View — no manual spreadsheet correlation.', primitives: ['Cortex Analyst', 'Semantic Views'] },
       { phase: 'hypothesize', title: 'Impact Quantified', description: 'Follow-up: "What\'s the revenue impact?" → Supplier A delays cost $340K in lost sales, B: $180K, C: $420K (premium electronics).', primitives: ['Cortex Analyst'] },
       { phase: 'plan', title: 'Action Plan Generated', description: 'Agent proposes: Supplier A — demand penalty clause activation, B — increase safety stock buffer, C — escalate to executive + explore alternate sourcing.', primitives: ['Cortex Agent'] },
@@ -52,7 +52,7 @@ export const scoScenarios: Scenario[] = [
     role: 'Logistics Manager',
     trigger: 'Daily route planning for 340 deliveries across Santiago metropolitan area',
     steps: [
-      { phase: 'detect', title: 'Daily Planning Trigger', description: '340 deliveries queued for today. Historical avg: 12 routes, 28 stops each, 94% on-time, $4.20/delivery.', primitives: ['Dynamic Tables'] },
+      { phase: 'detect', title: 'Daily Planning Trigger', description: '340 deliveries queued for today. Historical avg: 12 routes, 28 stops each, 94% on-time, $4.20/delivery.', primitives: ['Dynamic Tables'], liveQuery: { type: 'dt_refresh', buttonLabel: 'Show DT Refresh' } },
       { phase: 'observe', title: 'Constraint Analysis', description: 'SV_SUPPLY_CHAIN loads: time windows, vehicle capacity, traffic predictions, driver availability, priority tiers (same-day premium vs standard).', primitives: ['Semantic Views'] },
       { phase: 'hypothesize', title: 'Route Options', description: 'ML optimizer generates 3 route plans: A) min distance, B) min time windows violated, C) balanced (cost + SLA). Option C: 10 routes, 34 stops avg, projected 96% on-time, $3.28/delivery.', primitives: ['Snowpark ML'] },
       { phase: 'plan', title: 'Plan C Selected', description: 'Balanced plan selected. Special handling: 4 premium same-day guaranteed deliveries get dedicated driver. 2 fragile-item routes consolidated.', primitives: ['Cortex Agent'] },

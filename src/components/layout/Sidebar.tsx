@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   Users, ShoppingBag, CreditCard, Truck, Megaphone,
-  Layers, List, Shield, Map, Network, X
+  Layers, List, Shield, Map, Network, X, UserCircle
 } from 'lucide-react'
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { to: '/supply-chain', label: 'SCO · Supply Chain', icon: Truck },
   { to: '/marketing', label: 'MKT · Marketing & Growth', icon: Megaphone },
   { divider: true },
+  { to: '/customer-360', label: 'Customer 360', icon: UserCircle },
   { to: '/semantic-layer', label: 'Semantic Layer', icon: Layers },
   { to: '/scenarios', label: 'All Scenarios', icon: List },
   { to: '/compliance', label: 'Compliance', icon: Shield },
@@ -26,11 +27,24 @@ export function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => voi
     <aside className={`${open ? 'w-64' : 'w-0'} flex-shrink-0 overflow-hidden transition-all duration-300 bg-navy-900 border-r border-navy-700`}>
       <div className="flex h-full w-64 flex-col">
         <div className="flex items-center justify-between px-4 py-4 border-b border-navy-700">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center">
-              <span className="text-navy-950 font-bold text-sm">SR</span>
+          <div className="flex items-center gap-2.5">
+            <svg viewBox="0 0 36 36" className="h-8 w-8" fill="none">
+              <circle cx="18" cy="18" r="18" fill="#29B5E8" opacity="0.15"/>
+              <path d="M18 6L18 30M6 18L30 18M9.5 9.5L26.5 26.5M26.5 9.5L9.5 26.5" stroke="#29B5E8" strokeWidth="2" strokeLinecap="round"/>
+              <circle cx="18" cy="6" r="2.5" fill="#29B5E8"/>
+              <circle cx="18" cy="30" r="2.5" fill="#29B5E8"/>
+              <circle cx="6" cy="18" r="2.5" fill="#29B5E8"/>
+              <circle cx="30" cy="18" r="2.5" fill="#29B5E8"/>
+              <circle cx="9.5" cy="9.5" r="2" fill="#29B5E8"/>
+              <circle cx="26.5" cy="26.5" r="2" fill="#29B5E8"/>
+              <circle cx="26.5" cy="9.5" r="2" fill="#29B5E8"/>
+              <circle cx="9.5" cy="26.5" r="2" fill="#29B5E8"/>
+              <circle cx="18" cy="18" r="3" fill="#29B5E8"/>
+            </svg>
+            <div>
+              <span className="font-semibold text-sm text-white">SnowRetail</span>
+              <span className="block text-[10px] text-sf-blue">powered by Snowflake</span>
             </div>
-            <span className="font-semibold text-sm">SnowRetail</span>
           </div>
           <button onClick={onToggle} className="text-slate-400 hover:text-white">
             <X size={18} />
@@ -51,7 +65,7 @@ export function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => voi
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                     isActive
-                      ? 'bg-navy-700 text-gold-400 font-medium'
+                      ? 'bg-sf-blue/10 text-sf-blue font-medium border border-sf-blue/20'
                       : 'text-slate-300 hover:bg-navy-800 hover:text-white'
                   }`
                 }
@@ -64,8 +78,11 @@ export function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => voi
         </nav>
 
         <div className="px-4 py-3 border-t border-navy-700 text-xs text-slate-500">
-          <div>Snowflake AI Data Cloud</div>
-          <div>Chile/LATAM · synthetic demo</div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2 w-2 rounded-full bg-sf-blue animate-pulse" />
+            <span className="text-sf-blue">Snowflake AI Data Cloud</span>
+          </div>
+          <div className="mt-1">Chile/LATAM · synthetic demo</div>
         </div>
       </div>
     </aside>
