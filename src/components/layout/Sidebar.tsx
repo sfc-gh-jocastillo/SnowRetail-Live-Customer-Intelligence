@@ -5,19 +5,19 @@ import {
 } from 'lucide-react'
 
 const navItems = [
-  { to: '/', label: 'Executive Briefing', icon: Network },
-  { to: '/command-center', label: 'CIC · Customer Intelligence', icon: Users },
-  { to: '/omnichannel', label: 'OMN · Omnichannel Ops', icon: ShoppingBag },
-  { to: '/commerce', label: 'COM · Commerce & Revenue', icon: CreditCard },
-  { to: '/supply-chain', label: 'SCO · Supply Chain', icon: Truck },
-  { to: '/marketing', label: 'MKT · Marketing & Growth', icon: Megaphone },
+  { to: '/', label: 'Resumen Ejecutivo', icon: Network },
+  { to: '/command-center', label: 'CIC · Inteligencia de Clientes', icon: Users },
+  { to: '/omnichannel', label: 'OMN · Operaciones Omnicanal', icon: ShoppingBag },
+  { to: '/commerce', label: 'COM · Comercio e Ingresos', icon: CreditCard },
+  { to: '/supply-chain', label: 'SCO · Cadena de Suministro', icon: Truck },
+  { to: '/marketing', label: 'MKT · Marketing y Crecimiento', icon: Megaphone },
   { divider: true },
   { to: '/customer-360', label: 'Customer 360', icon: UserCircle },
   { to: '/semantic-layer', label: 'Semantic Layer', icon: Layers },
-  { to: '/scenarios', label: 'All Scenarios', icon: List },
-  { to: '/compliance', label: 'Compliance', icon: Shield },
+  { to: '/scenarios', label: 'Todos los Escenarios', icon: List },
+  { to: '/compliance', label: 'Cumplimiento', icon: Shield },
   { to: '/tours', label: 'Tours', icon: Map },
-  { to: '/architecture', label: 'Architecture', icon: Network },
+  { to: '/architecture', label: 'Arquitectura', icon: Network },
 ] as const
 
 type NavItem = { to: string; label: string; icon: typeof Users; divider?: never } | { divider: true; to?: never; label?: never; icon?: never }
@@ -82,7 +82,7 @@ export function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => voi
             <div className="h-2 w-2 rounded-full bg-sf-blue animate-pulse" />
             <span className="text-sf-blue">Snowflake AI Data Cloud</span>
           </div>
-          <div className="mt-1">Chile/LATAM · synthetic demo</div>
+          <div className="mt-1">Chile/LATAM · demo sintética</div>
         </div>
       </div>
     </aside>

@@ -9,7 +9,7 @@ const domainLabels: Record<string, string> = {
 export function Scenarios() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">All Scenarios ({scenarios.length})</h1>
+      <h1 className="text-2xl font-bold">Todos los Escenarios ({scenarios.length})</h1>
       <div className="grid gap-3">
         {scenarios.map(s => (
           <Link

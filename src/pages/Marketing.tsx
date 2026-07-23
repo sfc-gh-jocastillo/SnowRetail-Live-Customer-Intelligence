@@ -4,11 +4,11 @@ export function Marketing() {
   return (
     <DomainPage
       domain="mkt"
-      title="Marketing & Growth"
-      subtitle="Campaign orchestration, attribution, acquisition cost, loyalty programs, cohort analysis."
+      title="Marketing y Crecimiento"
+      subtitle="Orquestación de campañas, atribución, costo de adquisición, programas de fidelidad, análisis de cohortes."
       semanticView="SV_MARKETING_GROWTH"
       metrics={['roas', 'cac', 'campaign_lift', 'loyalty_retention', 'attributed_revenue']}
-      sampleQuery="What's the true ROAS of our loyalty email campaigns this quarter?"
+      sampleQuery="¿Cuál es el ROAS real de nuestras campañas de email a miembros de fidelidad?"
     />
   )
 }

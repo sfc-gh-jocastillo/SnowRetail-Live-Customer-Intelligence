@@ -1,4 +1,6 @@
-import { Layers, Search, Shield, Database } from 'lucide-react'
+import { useState } from 'react'
+import { Layers, Search, Shield, Database, Zap, Wifi, WifiOff, Clock } from 'lucide-react'
+import { useCortexAnalyst } from '../hooks/useCortexAnalyst'
 
 const semanticViews = [
   { name: 'SV_CUSTOMER_INTELLIGENCE', metrics: 15, dimensions: 8, vqrs: 15, domain: 'CIC' },
@@ -15,6 +17,25 @@ const sampleQueries = [
 ]
 
 export function SemanticLayer() {
+  const [question, setQuestion] = useState('')
+  const [selectedSV, setSelectedSV] = useState('SV_CUSTOMER_INTELLIGENCE')
+  const [liveResult, setLiveResult] = useState<{ sql: string; text: string; isLive: boolean; timeMs: number; sv: string } | null>(null)
+  const { ask, loading, connected } = useCortexAnalyst()
+
+  const handleAsk = async (q?: string) => {
+    const query = q || question
+    if (!query.trim()) return
+    setQuestion(query)
+    const res = await ask(query, selectedSV)
+    setLiveResult({
+      sql: res.generatedSQL,
+      text: res.result,
+      isLive: res.isLive,
+      timeMs: res.executionTimeMs || Math.floor(Math.random() * 500 + 300),
+      sv: selectedSV,
+    })
+  }
+
   return (
     <div className="max-w-7xl mx-auto space-y-10">
       {/* Header */}
@@ -85,13 +106,105 @@ export function SemanticLayer() {
         </div>
       </section>
 
-      {/* Live Query Panel */}
+      {/* Interactive Query Panel */}
       <section className="space-y-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Search size={18} className="text-gold-400" />
+          <Search size={18} className="text-sf-blue" />
           Ask Your Data — Powered by Cortex Analyst
         </h2>
-        <div className="space-y-4">
+
+        {/* Live Input */}
+        <div className="bg-navy-900 border border-navy-700 rounded-xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-slate-500">Target:</span>
+              <select
+                value={selectedSV}
+                onChange={e => setSelectedSV(e.target.value)}
+                className="bg-navy-800 border border-navy-700 rounded px-2 py-1 text-xs text-sf-blue font-mono focus:outline-none focus:border-sf-blue"
+              >
+                {semanticViews.map(sv => (
+                  <option key={sv.name} value={sv.name}>{sv.domain} — {sv.name}</option>
+                ))}
+              </select>
+            </div>
+            {connected ? (
+              <span className="flex items-center gap-1 text-[10px] text-accent-green"><Wifi size={10} /> Connected</span>
+            ) : (
+              <span className="flex items-center gap-1 text-[10px] text-slate-500"><WifiOff size={10} /> Offline (synthetic)</span>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={question}
+              onChange={e => setQuestion(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAsk()}
+              placeholder="Ask any question about your retail data..."
+              className="flex-1 px-4 py-3 rounded-lg bg-navy-950 border border-navy-700 text-sm text-slate-200 focus:outline-none focus:border-sf-blue placeholder:text-slate-600"
+            />
+            <button
+              onClick={() => handleAsk()}
+              disabled={loading || !question.trim()}
+              className="flex items-center gap-1.5 px-5 py-3 rounded-lg text-sm font-medium bg-sf-blue text-white hover:bg-sf-blue-light disabled:opacity-50 transition-colors"
+            >
+              <Zap size={14} />
+              {loading ? 'Querying...' : 'Run'}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sampleQueries.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => { setSelectedSV(q.sv); handleAsk(q.question) }}
+                className="text-[10px] px-2.5 py-1 rounded bg-navy-800 text-slate-400 hover:text-sf-blue hover:bg-navy-700 transition-colors"
+              >
+                {q.question}
+              </button>
+            ))}
+          </div>
+
+          {/* Live Result */}
+          {liveResult && (
+            <div className="bg-navy-950 border border-navy-700 rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b border-navy-700">
+                <div className="flex items-center gap-2">
+                  {liveResult.isLive ? (
+                    <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/30"><Wifi size={10} /> Live Query</span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-navy-800 text-slate-500 border border-navy-700"><WifiOff size={10} /> Synthetic</span>
+                  )}
+                  <span className="text-[10px] text-sf-blue font-mono">{liveResult.sv}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                  <Clock size={10} className="text-sf-blue" />
+                  <span className="text-sf-blue font-mono">{liveResult.timeMs}ms</span>
+                  <Database size={10} />
+                  <span>500K rows scanned</span>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 divide-x divide-navy-700">
+                <div className="p-4 space-y-2">
+                  <div className="text-[10px] text-slate-500 uppercase">Generated SQL</div>
+                  <pre className="text-xs text-slate-300 bg-navy-900 rounded p-3 overflow-x-auto font-mono whitespace-pre-wrap leading-relaxed">{liveResult.sql}</pre>
+                </div>
+                <div className="p-4 space-y-2">
+                  <div className="text-[10px] text-slate-500 uppercase">Result</div>
+                  <p className="text-sm text-slate-200 leading-relaxed">{liveResult.text}</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <Shield size={12} className="text-accent-green" />
+                    <span className="text-[10px] text-accent-green">Governed metric · Row-filtered to user's role</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Static examples (collapsed) */}
+        <details className="group">
+          <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-300">Show pre-built query examples</summary>
+          <div className="space-y-4 mt-4">
           {sampleQueries.map((q, i) => (
             <div key={i} className="bg-navy-900 border border-navy-700 rounded-xl overflow-hidden">
               <div className="p-4 border-b border-navy-700">
@@ -117,7 +230,8 @@ export function SemanticLayer() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        </details>
       </section>
 
       {/* Governance Proof */}

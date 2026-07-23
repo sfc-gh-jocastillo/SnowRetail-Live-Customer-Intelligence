@@ -6,9 +6,9 @@ export function Architecture() {
       <section className="space-y-2">
         <h1 className="text-2xl font-bold flex items-center gap-3">
           <Network size={24} className="text-gold-400" />
-          Architecture
+          Arquitectura
         </h1>
-        <p className="text-sm text-slate-400">Snowflake blueprint — the Semantic Layer sits between gold marts and all consumers.</p>
+        <p className="text-sm text-slate-400">Blueprint de Snowflake — el Semantic Layer se ubica entre los marts gold y todos los consumidores.</p>
       </section>
 
       {/* Architecture Diagram */}
@@ -23,25 +23,25 @@ export function Architecture() {
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="p-3 rounded bg-navy-800 border border-navy-700">
             <div className="text-[10px] text-slate-500 uppercase">Bronze</div>
-            <div className="text-xs text-slate-300">Raw ingestion</div>
+            <div className="text-xs text-slate-300">Ingesta cruda</div>
           </div>
           <div className="p-3 rounded bg-navy-800 border border-navy-700">
             <div className="text-[10px] text-slate-500 uppercase">Silver</div>
-            <div className="text-xs text-slate-300">Cleaned + conformed</div>
+            <div className="text-xs text-slate-300">Limpio + conformado</div>
           </div>
           <div className="p-3 rounded bg-navy-800 border border-navy-700">
             <div className="text-[10px] text-slate-500 uppercase">Gold</div>
-            <div className="text-xs text-slate-300">Business marts (Dynamic Tables)</div>
+            <div className="text-xs text-slate-300">Marts de negocio (Dynamic Tables)</div>
           </div>
         </div>
-        <div className="text-center text-slate-600 text-xs">↓ Dynamic Tables (always fresh)</div>
+        <div className="text-center text-slate-600 text-xs">↓ Dynamic Tables (siempre frescos)</div>
 
         <div className="p-4 rounded-lg bg-gradient-to-r from-gold-500/10 to-gold-400/5 border border-gold-500/30 text-center space-y-1">
           <div className="text-gold-400 font-semibold text-sm">SEMANTIC LAYER</div>
-          <div className="text-xs text-slate-400">5 Semantic Views · 66 metrics · 44 dimensions · 66 VQRs</div>
-          <div className="text-xs text-slate-500">Governed definitions · Row-level security · Column masking</div>
+          <div className="text-xs text-slate-400">5 Semantic Views · 66 métricas · 44 dimensiones · 66 VQRs</div>
+          <div className="text-xs text-slate-500">Definiciones gobernadas · Seguridad a nivel de fila · Column Masking</div>
         </div>
-        <div className="text-center text-slate-600 text-xs">↓ One truth, many consumers</div>
+        <div className="text-center text-slate-600 text-xs">↓ Una verdad, muchos consumidores</div>
 
         <div className="grid grid-cols-5 gap-4 text-center">
           {['Cortex Agent', 'Cortex Analyst', 'Dashboards', 'Store Tablet', 'Compliance'].map(c => (
@@ -52,7 +52,7 @@ export function Architecture() {
 
       {/* Snowflake Primitives */}
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Snowflake Primitives in Play</h2>
+        <h2 className="text-lg font-semibold">Primitivas Snowflake en Juego</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             'Semantic Views', 'Cortex Agents', 'Cortex Analyst', 'Cortex Complete',

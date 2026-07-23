@@ -87,7 +87,7 @@ export function StreamingSimulator() {
             </div>
           ))}
           {events.length === 0 && (
-            <div className="text-slate-600 text-center py-8">Click Start to simulate streaming ingestion</div>
+            <div className="text-slate-600 text-center py-8">Presiona Iniciar para simular ingesta streaming</div>
           )}
         </div>
       </div>
@@ -103,9 +103,9 @@ export function StreamingSimulator() {
           }`}
         >
           <Zap size={12} />
-          {running ? 'Stop Stream' : 'Start Stream'}
+          {running ? 'Detener Stream' : 'Iniciar Stream'}
         </button>
-        <span className="text-[10px] text-slate-500">Sub-second ingestion from 50 stores into Snowflake</span>
+        <span className="text-[10px] text-slate-500">Ingesta sub-segundo desde 50 tiendas hacia Snowflake</span>
       </div>
     </div>
   )

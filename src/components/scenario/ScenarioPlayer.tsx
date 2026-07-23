@@ -7,13 +7,13 @@ import { StreamingSimulator } from './StreamingSimulator'
 import { DynamicTableRefresh } from './DynamicTableRefresh'
 
 const phaseLabels: Record<string, { label: string; color: string }> = {
-  detect: { label: 'Detect', color: 'bg-accent-red/20 text-accent-red' },
-  observe: { label: 'Observe', color: 'bg-accent-blue/20 text-accent-blue' },
-  hypothesize: { label: 'Hypothesize', color: 'bg-accent-purple/20 text-accent-purple' },
-  plan: { label: 'Plan', color: 'bg-gold-500/20 text-gold-400' },
-  act: { label: 'Act', color: 'bg-accent-green/20 text-accent-green' },
-  verify: { label: 'Verify', color: 'bg-accent-blue/20 text-accent-blue' },
-  resolve: { label: 'Resolve', color: 'bg-accent-green/20 text-accent-green' },
+  detect: { label: 'Detectar', color: 'bg-accent-red/20 text-accent-red' },
+  observe: { label: 'Observar', color: 'bg-accent-blue/20 text-accent-blue' },
+  hypothesize: { label: 'Hipótesis', color: 'bg-accent-purple/20 text-accent-purple' },
+  plan: { label: 'Planificar', color: 'bg-gold-500/20 text-gold-400' },
+  act: { label: 'Actuar', color: 'bg-accent-green/20 text-accent-green' },
+  verify: { label: 'Verificar', color: 'bg-accent-blue/20 text-accent-blue' },
+  resolve: { label: 'Resolver', color: 'bg-accent-green/20 text-accent-green' },
 }
 
 export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
@@ -105,7 +105,7 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
         </div>
         <h1 className="text-2xl font-bold">{scenario.title}</h1>
         <p className="text-sm text-slate-400">{scenario.description}</p>
-        <div className="text-xs text-slate-500">Role: <span className="text-slate-300">{scenario.role}</span> · Trigger: <span className="text-slate-300">{scenario.trigger}</span></div>
+        <div className="text-xs text-slate-500">Rol: <span className="text-slate-300">{scenario.role}</span> · Gatillo: <span className="text-slate-300">{scenario.trigger}</span></div>
       </div>
 
       {/* Timeline */}
@@ -139,7 +139,7 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
         <button onClick={next} className="p-2 rounded bg-navy-800 text-slate-400 hover:text-white">
           <SkipForward size={16} />
         </button>
-        <span className="text-xs text-slate-500 ml-2">Step {currentStep + 1} of {scenario.steps.length}</span>
+        <span className="text-xs text-slate-500 ml-2">Paso {currentStep + 1} de {scenario.steps.length}</span>
       </div>
 
       {/* Active Step */}
@@ -159,7 +159,7 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-accent-green/10 text-accent-green border border-accent-green/30 hover:bg-accent-green/20 disabled:opacity-50 transition-colors"
             >
               <Zap size={12} className={loading ? 'animate-pulse' : ''} />
-              {loading ? 'Running...' : step.liveQuery.buttonLabel}
+              {loading ? 'Ejecutando...' : step.liveQuery.buttonLabel}
             </button>
           )}
         </div>
@@ -197,21 +197,21 @@ export function ScenarioPlayer({ scenario }: { scenario: Scenario }) {
           <Clock size={18} className="text-accent-blue" />
           <div>
             <div className="text-sm font-bold text-accent-blue">{scenario.roi.hoursSaved}</div>
-            <div className="text-[10px] text-slate-500 uppercase">Hours Saved</div>
+            <div className="text-[10px] text-slate-500 uppercase">Horas Ahorradas</div>
           </div>
         </div>
         <div className="bg-navy-900 border border-navy-700 rounded-lg p-4 flex items-center gap-3">
           <DollarSign size={18} className="text-accent-green" />
           <div>
             <div className="text-sm font-bold text-accent-green">{scenario.roi.valueProtected}</div>
-            <div className="text-[10px] text-slate-500 uppercase">Value Protected</div>
+            <div className="text-[10px] text-slate-500 uppercase">Valor Protegido</div>
           </div>
         </div>
         <div className="bg-navy-900 border border-navy-700 rounded-lg p-4 flex items-center gap-3">
           <Users size={18} className="text-gold-400" />
           <div>
             <div className="text-sm font-bold text-gold-400">{scenario.roi.customersImpacted}</div>
-            <div className="text-[10px] text-slate-500 uppercase">Customers Impacted</div>
+            <div className="text-[10px] text-slate-500 uppercase">Clientes Impactados</div>
           </div>
         </div>
       </div>

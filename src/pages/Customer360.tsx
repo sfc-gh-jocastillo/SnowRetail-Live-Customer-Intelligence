@@ -71,7 +71,7 @@ export function Customer360() {
             <User size={24} className="text-gold-400" />
             Customer 360
           </h1>
-          <p className="text-sm text-slate-400 mt-1">Identity-resolved customer profile powered by Semantic Views</p>
+          <p className="text-sm text-slate-400 mt-1">Perfil de cliente con resolución de identidad impulsado por Semantic Views</p>
         </div>
         <div className="flex gap-2">
           {SAMPLE_CUSTOMERS.map(c => (
@@ -164,7 +164,7 @@ export function Customer360() {
         <div className="bg-navy-900 border border-navy-700 rounded-xl p-5 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
             <ShoppingBag size={14} className="text-gold-400" />
-            Purchase Timeline
+            Historial de Compras
           </div>
           <div className="space-y-2">
             {PURCHASE_HISTORY.map((p, i) => (
@@ -188,15 +188,15 @@ export function Customer360() {
         <div className="bg-accent-red/5 border border-accent-red/20 rounded-xl p-5 flex items-center gap-4">
           <TrendingDown size={24} className="text-accent-red" />
           <div className="flex-1">
-            <div className="text-sm font-medium text-accent-red">High Churn Risk — Intervention Recommended</div>
+            <div className="text-sm font-medium text-accent-red">Alto Riesgo de Churn — Se Recomienda Intervención</div>
             <div className="text-xs text-slate-400 mt-1">
-              This customer has {selectedCustomer.churnProbability * 100}% exit probability within 30 days.
-              Last purchase {selectedCustomer.daysSinceLastPurchase} days ago (declining from monthly cadence).
-              Cortex Agent recommends: loyalty point boost + personalized re-engagement campaign.
+              Este cliente tiene {selectedCustomer.churnProbability * 100}% de probabilidad de salida dentro de 30 días.
+              Última compra hace {selectedCustomer.daysSinceLastPurchase} días (declinando desde cadencia mensual).
+              Cortex Agent recomienda: boost de puntos de fidelidad + campaña personalizada de re-engagement.
             </div>
           </div>
           <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-accent-red/10 text-accent-red border border-accent-red/30 hover:bg-accent-red/20">
-            <Zap size={12} /> Trigger NBA
+            <Zap size={12} /> Disparar NBA
           </button>
         </div>
       )}
@@ -205,7 +205,7 @@ export function Customer360() {
       <div className="bg-navy-900 border border-navy-700 rounded-xl p-5 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <MessageSquare size={14} className="text-gold-400" />
-          Ask about this customer — powered by Cortex Analyst
+          Preguntar sobre este cliente — impulsado por Cortex Analyst
         </div>
         <div className="flex gap-3">
           <input
@@ -213,7 +213,7 @@ export function Customer360() {
             value={nlQuestion}
             onChange={e => setNlQuestion(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleAsk()}
-            placeholder="E.g., Why is this customer at risk of churning?"
+            placeholder="Ej: ¿Por qué este cliente está en riesgo de churn?"
             className="flex-1 px-4 py-2.5 rounded-lg bg-navy-950 border border-navy-700 text-sm text-slate-200 focus:outline-none focus:border-gold-500 placeholder:text-slate-600"
           />
           <button
@@ -222,11 +222,11 @@ export function Customer360() {
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-gold-500 text-navy-950 hover:bg-gold-400 disabled:opacity-50"
           >
             <Zap size={14} />
-            {loading ? 'Asking...' : 'Ask'}
+            {loading ? 'Consultando...' : 'Preguntar'}
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {['Why is churn so high for this customer?', 'What categories should we recommend?', 'Compare to similar customers in the same region'].map(q => (
+          {['¿Por qué el churn es tan alto para este cliente?', '¿Qué categorías deberíamos recomendar?', 'Comparar con clientes similares en la misma región'].map(q => (
             <button
               key={q}
               onClick={() => { setNlQuestion(q); }}
@@ -243,8 +243,8 @@ export function Customer360() {
       <div className="bg-gold-500/5 border border-gold-500/20 rounded-xl p-4 flex items-start gap-3">
         <Heart size={16} className="text-gold-400 flex-shrink-0 mt-0.5" />
         <div className="text-xs text-slate-300">
-          <span className="text-gold-400 font-medium">Semantic Layer Proof:</span> Every metric on this page (CLV, churn probability, NPS, cross-sell propensity) is defined once in <span className="font-mono text-accent-blue">SV_CUSTOMER_INTELLIGENCE</span>.
-          The same governed definitions power this 360 view, the retention agent's decisions, and the CFO's board deck. Zero reconciliation.
+          <span className="text-gold-400 font-medium">Prueba del Semantic Layer:</span> Cada métrica en esta página (CLV, probabilidad de churn, NPS, cross-sell) se define una vez en <span className="font-mono text-accent-blue">SV_CUSTOMER_INTELLIGENCE</span>.
+          Las mismas definiciones gobernadas alimentan esta vista 360, las decisiones del agente de retención y el deck del directorio del CFO. Cero reconciliación.
         </div>
       </div>
     </div>

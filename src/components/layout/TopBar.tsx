@@ -27,13 +27,13 @@ export function TopBar({ onMenuToggle }: { onMenuToggle: () => void }) {
           </button>
           <div className="flex items-center gap-4 text-xs text-slate-400">
             <span>
-              <span className="text-gold-400 font-mono">{signals.toLocaleString()}</span> signals
+              <span className="text-gold-400 font-mono">{signals.toLocaleString()}</span> señales
             </span>
             <span>
-              <span className="text-accent-blue font-mono">{decisions}</span> agent decisions
+              <span className="text-accent-blue font-mono">{decisions}</span> decisiones agente
             </span>
             <span>
-              <span className="text-accent-green font-mono">{actions}</span> closed-loop actions
+              <span className="text-accent-green font-mono">{actions}</span> acciones cerradas
             </span>
           </div>
         </div>
@@ -52,7 +52,7 @@ export function TopBar({ onMenuToggle }: { onMenuToggle: () => void }) {
             }`}
           >
             {connected ? <Wifi size={14} /> : <WifiOff size={14} />}
-            <span>{connected ? 'Live' : 'Offline'}</span>
+            <span>{connected ? 'En vivo' : 'Sin conexión'}</span>
           </button>
         </div>
       </header>
@@ -93,7 +93,7 @@ function ConnectModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="bg-navy-900 border border-navy-700 rounded-xl p-6 w-full max-w-md space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-sm">Snowflake Connection</h2>
+          <h2 className="font-semibold text-sm">Conexión a Snowflake</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white">
             <X size={18} />
           </button>
@@ -111,22 +111,22 @@ function ConnectModal({
             </p>
             <div className="flex gap-3">
               <button onClick={onDisconnect} className="px-4 py-2 rounded-lg bg-accent-red/10 text-accent-red text-sm border border-accent-red/30 hover:bg-accent-red/20">
-                Disconnect
+                Desconectar
               </button>
               <button onClick={onClose} className="px-4 py-2 rounded-lg bg-navy-800 text-slate-300 text-sm hover:bg-navy-700">
-                Close
+                Cerrar
               </button>
             </div>
           </div>
         ) : (
           <div className="space-y-4">
             <p className="text-xs text-slate-400">
-              Connect to your Snowflake account to enable live Cortex Analyst queries
-              through the Semantic Views. You need a Programmatic Access Token (PAT) or session token.
+              Conecta tu cuenta Snowflake para habilitar consultas en vivo a Cortex Analyst
+              a través de las Semantic Views. Necesitas un Programmatic Access Token (PAT) o token de sesión.
             </p>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-slate-500 block mb-1">Account URL</label>
+                <label className="text-xs text-slate-500 block mb-1">URL de la Cuenta</label>
                 <input
                   type="text"
                   value={accountUrl}
@@ -136,7 +136,7 @@ function ConnectModal({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 block mb-1">Access Token (PAT or Session Token)</label>
+                <label className="text-xs text-slate-500 block mb-1">Token de Acceso (PAT o Session Token)</label>
                 <input
                   type="password"
                   value={token}
@@ -157,10 +157,10 @@ function ConnectModal({
                 disabled={connecting || !token}
                 className="px-4 py-2 rounded-lg bg-gold-500 text-navy-950 text-sm font-medium hover:bg-gold-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {connecting ? 'Connecting...' : 'Connect'}
+                {connecting ? 'Conectando...' : 'Conectar'}
               </button>
               <button onClick={onClose} className="px-4 py-2 rounded-lg bg-navy-800 text-slate-300 text-sm hover:bg-navy-700">
-                Cancel
+                Cancelar
               </button>
             </div>
           </div>

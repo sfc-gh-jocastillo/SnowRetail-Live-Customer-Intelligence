@@ -45,17 +45,17 @@ export function DynamicTableRefresh() {
       <div className="px-4 py-4 space-y-3">
         <div className="grid grid-cols-3 gap-4 text-xs">
           <div>
-            <div className="text-[10px] text-slate-500 uppercase mb-1">Last Refresh</div>
+            <div className="text-[10px] text-slate-500 uppercase mb-1">Último Refresh</div>
             <div className="text-slate-300 font-mono">{lastRefresh.toLocaleTimeString()}</div>
             <div className="text-slate-500">({secondsAgo}s ago)</div>
           </div>
           <div>
-            <div className="text-[10px] text-slate-500 uppercase mb-1">Next Refresh</div>
+            <div className="text-[10px] text-slate-500 uppercase mb-1">Próximo Refresh</div>
             <div className="text-slate-300 font-mono">~{Math.max(0, targetLag - secondsAgo)}s</div>
             <div className="text-slate-500">remaining</div>
           </div>
           <div>
-            <div className="text-[10px] text-slate-500 uppercase mb-1">Rows</div>
+            <div className="text-[10px] text-slate-500 uppercase mb-1">Filas</div>
             <div className="text-slate-300 font-mono">500,000</div>
             <div className="flex items-center gap-1 text-accent-green text-[10px]">
               <CheckCircle size={10} /> FRESH
@@ -80,7 +80,7 @@ export function DynamicTableRefresh() {
         {/* Before/After */}
         {showChange && (
           <div className="border border-accent-green/20 bg-accent-green/5 rounded-lg p-3 space-y-1 animate-in fade-in">
-            <div className="text-[10px] text-accent-green uppercase font-medium">Change Detected</div>
+            <div className="text-[10px] text-accent-green uppercase font-medium">Cambio Detectado</div>
             <div className="grid grid-cols-2 gap-4 text-xs font-mono">
               <div>
                 <span className="text-slate-500">Before:</span>
@@ -91,7 +91,7 @@ export function DynamicTableRefresh() {
                 <span className="text-accent-green ml-2">churn_rate Sur = 0.1152 (+0.04pp)</span>
               </div>
             </div>
-            <div className="text-[10px] text-slate-500">3 customers crossed P1 churn threshold — NBA triggered</div>
+            <div className="text-[10px] text-slate-500">3 clientes cruzaron umbral P1 de churn — NBA disparado</div>
           </div>
         )}
       </div>
@@ -104,11 +104,11 @@ export function DynamicTableRefresh() {
           className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium bg-accent-blue/10 text-accent-blue border border-accent-blue/30 hover:bg-accent-blue/20 disabled:opacity-50"
         >
           <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
-          {refreshing ? 'Refreshing...' : 'Trigger Refresh'}
+          {refreshing ? 'Refrescando...' : 'Disparar Refresh'}
         </button>
         <div className="flex items-center gap-2 text-[10px] text-slate-500">
           <Database size={10} />
-          <span>Incremental refresh — only changed partitions recomputed</span>
+          <span>Refresh incremental — solo particiones modificadas se recomputan</span>
         </div>
       </div>
     </div>
