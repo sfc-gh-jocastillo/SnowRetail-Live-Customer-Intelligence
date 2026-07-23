@@ -50,17 +50,13 @@ export function QueryResultCard({ result }: { result: QueryResult }) {
         </div>
       </div>
 
-      {/* SQL */}
-      <div className="px-4 py-3 border-b border-navy-700">
-        <div className="text-[10px] text-slate-500 uppercase mb-1">Generated SQL</div>
-        <pre className="text-xs text-slate-300 font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap">{result.sql}</pre>
-      </div>
-
-      {/* Results */}
+      {/* Results first (natural language answer) */}
       <div className="px-4 py-3">
-        {result.rows && result.rows.length > 0 ? (
+        {result.resultText ? (
+          <p className="text-sm text-slate-200 leading-relaxed">{result.resultText}</p>
+        ) : result.rows && result.rows.length > 0 ? (
           <div className="overflow-x-auto">
-            <div className="text-[10px] text-slate-500 uppercase mb-2">Results ({result.rows.length} rows)</div>
+            <div className="text-[10px] text-slate-500 uppercase mb-2">Resultados ({result.rows.length} filas)</div>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-navy-700">
@@ -82,12 +78,17 @@ export function QueryResultCard({ result }: { result: QueryResult }) {
               </tbody>
             </table>
           </div>
-        ) : result.resultText ? (
-          <div>
-            <div className="text-[10px] text-slate-500 uppercase mb-1">Analysis</div>
-            <p className="text-sm text-slate-300 leading-relaxed">{result.resultText}</p>
-          </div>
         ) : null}
+      </div>
+
+      {/* SQL collapsible */}
+      <div className="px-4 pb-3">
+        <details className="group">
+          <summary className="text-[10px] text-slate-500 cursor-pointer hover:text-sf-blue transition-colors">
+            Ver SQL generado hacia Semantic View
+          </summary>
+          <pre className="mt-2 text-xs text-slate-300 font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap bg-navy-900 rounded p-3">{result.sql}</pre>
+        </details>
       </div>
 
       {/* Performance Strip */}

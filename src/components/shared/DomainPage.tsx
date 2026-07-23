@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Layers, MessageSquare, Play, Zap, Wifi, WifiOff, Clock, Database } from 'lucide-react'
+import { Layers, MessageSquare, Play, Zap, Wifi, WifiOff, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { scenarios } from '../../data/scenarios'
 import { useCortexAnalyst } from '../../hooks/useCortexAnalyst'
@@ -100,28 +100,25 @@ export function DomainPage({ domain, title, subtitle, semanticView, metrics, sam
             <div className="flex items-center justify-between px-4 py-2 border-b border-navy-700">
               <div className="flex items-center gap-2">
                 {result.isLive ? (
-                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/30"><Wifi size={10} /> Live</span>
+                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/30"><Wifi size={10} /> En vivo</span>
                 ) : (
-                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-navy-800 text-slate-500 border border-navy-700"><WifiOff size={10} /> Synthetic</span>
+                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-navy-800 text-slate-500 border border-navy-700"><WifiOff size={10} /> Sintético</span>
                 )}
                 <span className="text-[10px] text-sf-blue font-mono">{semanticView}</span>
               </div>
               <div className="flex items-center gap-2 text-[10px] text-slate-400">
                 <Clock size={10} className="text-sf-blue" />
                 <span className="text-sf-blue font-mono">{result.timeMs}ms</span>
-                <Database size={10} />
-                <span>500K rows</span>
               </div>
             </div>
             <div className="p-4 space-y-3">
-              <div>
-                <div className="text-[10px] text-slate-500 uppercase mb-1">Generated SQL</div>
-                <pre className="text-xs text-slate-300 font-mono bg-navy-900 rounded p-3 overflow-x-auto whitespace-pre-wrap">{result.sql}</pre>
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-500 uppercase mb-1">Result</div>
-                <p className="text-sm text-slate-200 leading-relaxed">{result.text}</p>
-              </div>
+              <p className="text-sm text-slate-200 leading-relaxed">{result.text}</p>
+              <details className="group">
+                <summary className="text-[10px] text-slate-500 cursor-pointer hover:text-sf-blue transition-colors">
+                  Ver SQL generado hacia Semantic View
+                </summary>
+                <pre className="mt-2 text-xs text-slate-300 font-mono bg-navy-900 rounded p-3 overflow-x-auto whitespace-pre-wrap">{result.sql}</pre>
+              </details>
             </div>
           </div>
         )}

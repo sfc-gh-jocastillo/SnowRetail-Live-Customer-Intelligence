@@ -183,17 +183,21 @@ export function SemanticLayer() {
                   <span>500K rows scanned</span>
                 </div>
               </div>
-              <div className="grid md:grid-cols-2 divide-x divide-navy-700">
-                <div className="p-4 space-y-2">
-                  <div className="text-[10px] text-slate-500 uppercase">Generated SQL</div>
-                  <pre className="text-xs text-slate-300 bg-navy-900 rounded p-3 overflow-x-auto font-mono whitespace-pre-wrap leading-relaxed">{liveResult.sql}</pre>
-                </div>
-                <div className="p-4 space-y-2">
-                  <div className="text-[10px] text-slate-500 uppercase">Result</div>
+              <div className="grid md:grid-cols-1">
+                <div className="p-4 space-y-3">
                   <p className="text-sm text-slate-200 leading-relaxed">{liveResult.text}</p>
-                  <div className="flex items-center gap-2 mt-3">
+                  <details className="group">
+                    <summary className="text-[10px] text-slate-500 cursor-pointer hover:text-sf-blue transition-colors">
+                      Ver SQL generado hacia Semantic View
+                    </summary>
+                    <div className="mt-2 space-y-2">
+                      <div className="text-xs text-sf-blue font-mono">{liveResult.sv}</div>
+                      <pre className="text-xs text-slate-300 bg-navy-900 rounded p-3 overflow-x-auto font-mono whitespace-pre-wrap leading-relaxed">{liveResult.sql}</pre>
+                    </div>
+                  </details>
+                  <div className="flex items-center gap-2 mt-2">
                     <Shield size={12} className="text-accent-green" />
-                    <span className="text-[10px] text-accent-green">Governed metric · Row-filtered to user's role</span>
+                    <span className="text-[10px] text-accent-green">Métrica gobernada · Filtrada por rol del usuario</span>
                   </div>
                 </div>
               </div>
