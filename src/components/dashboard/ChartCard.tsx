@@ -1,10 +1,4 @@
-import ReactEChartsCore from 'echarts-for-react/lib/core'
-import * as echarts from 'echarts/core'
-import { BarChart, PieChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
-
-echarts.use([BarChart, PieChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
+import ReactECharts from 'echarts-for-react'
 
 const CHART_COLORS = ['#29B5E8', '#F5A623', '#4ADE80', '#F87171', '#A78BFA', '#22D3EE']
 
@@ -35,8 +29,7 @@ export function ChartCard({ title, type, data, labelKey, valueKey, secondaryKey,
   return (
     <div className="bg-navy-900 border border-navy-700 rounded-xl p-4">
       <div className="text-xs font-medium text-slate-400 mb-2">{title}</div>
-      <ReactEChartsCore
-        echarts={echarts}
+      <ReactECharts
         option={option}
         style={{ height: '200px' }}
         opts={{ renderer: 'canvas' }}
