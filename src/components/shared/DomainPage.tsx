@@ -3,6 +3,8 @@ import { Layers, MessageSquare, Play, Zap, Wifi, WifiOff, Clock } from 'lucide-r
 import { Link } from 'react-router-dom'
 import { scenarios } from '../../data/scenarios'
 import { useCortexAnalyst } from '../../hooks/useCortexAnalyst'
+import { DomainDashboard } from '../dashboard/DomainDashboard'
+import { DOMAIN_DASHBOARDS } from '../../lib/dashboardQueries'
 
 interface DomainPageProps {
   domain: string
@@ -18,6 +20,7 @@ export function DomainPage({ domain, title, subtitle, semanticView, metrics, sam
   const [question, setQuestion] = useState('')
   const [result, setResult] = useState<{ sql: string; text: string; isLive: boolean; timeMs: number } | null>(null)
   const { ask, loading, connected } = useCortexAnalyst()
+  const dashboardConfig = DOMAIN_DASHBOARDS[domain]
 
   const handleAsk = async (q?: string) => {
     const query = q || question
@@ -38,6 +41,9 @@ export function DomainPage({ domain, title, subtitle, semanticView, metrics, sam
         <h1 className="text-2xl font-bold">{title}</h1>
         <p className="text-sm text-slate-400">{subtitle}</p>
       </section>
+
+      {/* Analytics Dashboard */}
+      {dashboardConfig && <DomainDashboard config={dashboardConfig} />}
 
       {/* Interactive Ask Panel */}
       <section className="bg-navy-900 border border-navy-700 rounded-xl p-5 space-y-4">
@@ -86,10 +92,10 @@ export function DomainPage({ domain, title, subtitle, semanticView, metrics, sam
           {metrics.slice(0, 3).map(m => (
             <button
               key={m}
-              onClick={() => handleAsk(`What is the average ${m.replace(/_/g, ' ')} by region?`)}
+              onClick={() => handleAsk(`¿Cuál es el promedio de ${m.replace(/_/g, ' ')} por región?`)}
               className="text-[10px] px-2 py-1 rounded bg-navy-800 text-slate-400 hover:text-sf-blue hover:bg-navy-700 transition-colors"
             >
-              avg {m.replace(/_/g, ' ')} by region
+              {m.replace(/_/g, ' ')} por región
             </button>
           ))}
         </div>
@@ -112,7 +118,7 @@ export function DomainPage({ domain, title, subtitle, semanticView, metrics, sam
               </div>
             </div>
             <div className="p-4 space-y-3">
-              <p className="text-sm text-slate-200 leading-relaxed">{result.text}</p>
+              <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">{result.text}</p>
               <details className="group">
                 <summary className="text-[10px] text-slate-500 cursor-pointer hover:text-sf-blue transition-colors">
                   Ver SQL generado hacia Semantic View
