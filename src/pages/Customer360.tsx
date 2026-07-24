@@ -203,7 +203,7 @@ export function Customer360() {
             </div>
             <div className="bg-navy-950 rounded-lg p-2">
               <div className="text-slate-500">Tarjeta</div>
-              <div className="font-medium">{selectedCustomer.hasCard ? 'Ripley Card' : 'Sin Tarjeta'}</div>
+              <div className="font-medium">{selectedCustomer.hasCard ? 'SnowRetail Card' : 'Sin Tarjeta'}</div>
             </div>
           </div>
           <div className="text-[10px] text-slate-500 flex items-center gap-1">

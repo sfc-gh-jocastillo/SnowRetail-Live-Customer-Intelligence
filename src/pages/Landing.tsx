@@ -25,7 +25,7 @@ const domains = [
   },
   {
     id: 'com', to: '/commerce', icon: CreditCard, name: 'COM', title: 'Comercio e Ingresos',
-    description: 'Motor de pricing, promociones, revenue assurance, detección de fraude, Tarjeta Ripley.',
+    description: 'Motor de pricing, promociones, revenue assurance, detección de fraude, Tarjeta SnowRetail.',
     stat: '$2.4M fuga cerrada',
     highlights: ['Motor de pricing dinámico', 'Detección de fraude en tiempo real', 'Revenue assurance automatizado'],
   },

@@ -46,7 +46,7 @@ export const comScenarios: Scenario[] = [
   {
     id: 'com-card-fraud',
     domain: 'com',
-    title: 'Ripley Card Real-Time Fraud Detection',
+    title: 'SnowRetail Card Real-Time Fraud Detection',
     description: 'ML model + rules engine blocks fraudulent transactions within 200ms, preventing $8.2M annually.',
     isSemanticHero: false,
     role: 'Fraud Operations',
