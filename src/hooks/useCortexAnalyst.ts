@@ -127,25 +127,70 @@ export function useCortexAnalyst() {
 
 function buildSpanishSummary(columns: string[], rows: Record<string, unknown>[]): string {
   if (rows.length === 0) return 'La consulta no retornó resultados.'
-  const numRows = rows.length
   const firstCol = columns[0]
   const metricCols = columns.slice(1)
 
-  if (numRows <= 10 && metricCols.length > 0) {
-    const lines = rows.map(row => {
-      const dim = String(row[firstCol] || 'N/A')
-      const metrics = metricCols.map(col => {
-        const val = row[col]
-        if (typeof val === 'number') {
-          if (val < 1 && val > 0) return `${col.toLowerCase().replace(/_/g, ' ')}: ${(val * 100).toFixed(1)}%`
-          return `${col.toLowerCase().replace(/_/g, ' ')}: ${val.toLocaleString('es-CL', { maximumFractionDigits: 2 })}`
-        }
-        return `${col.toLowerCase().replace(/_/g, ' ')}: ${val}`
-      }).join(' · ')
-      return `• **${dim}** → ${metrics}`
-    })
-    return `Resultados (${numRows} filas):\n\n${lines.join('\n')}`
+  const displayRows = rows.slice(0, 10)
+  const lines = displayRows.map(row => {
+    const dim = translateLabel(String(row[firstCol] || 'N/A'))
+    const metrics = metricCols.map(col => {
+      const val = row[col]
+      const label = translateColumn(col)
+      if (typeof val === 'number') {
+        return `${label}: ${formatMetric(val, col)}`
+      }
+      return `${label}: ${val}`
+    }).join(' · ')
+    return `• **${dim}** → ${metrics}`
+  })
+
+  let summary = `Resultados (${rows.length > 10 ? `top 10 de ${rows.length}` : `${rows.length}`} filas):\n\n${lines.join('\n')}`
+
+  if (rows.length > 10 && metricCols.length > 0) {
+    const firstMetric = metricCols[0]
+    const values = rows.map(r => Number(r[firstMetric] || 0)).filter(v => !isNaN(v))
+    if (values.length > 0) {
+      const avg = values.reduce((s, v) => s + v, 0) / values.length
+      const max = Math.max(...values)
+      const min = Math.min(...values)
+      summary += `\n\n**Resumen:** ${translateColumn(firstMetric)} promedio: ${formatMetric(avg, firstMetric)}, máximo: ${formatMetric(max, firstMetric)}, mínimo: ${formatMetric(min, firstMetric)} (${rows.length} registros totales).`
+    }
   }
 
-  return `La consulta retornó ${numRows} filas con columnas: ${columns.join(', ')}.`
+  return summary
+}
+
+function translateColumn(col: string): string {
+  const map: Record<string, string> = {
+    'AISLE': 'pasillo', 'TRAFFIC': 'tráfico', 'CONVERSION': 'conversión',
+    'REVENUE': 'ingreso', 'MARGIN': 'margen', 'LEAKAGE': 'fuga',
+    'AVG_CLV': 'CLV promedio', 'AVG_CHURN': 'prob. fuga', 'AVG_NPS': 'NPS',
+    'CUSTOMERS': 'clientes', 'SEGMENT': 'segmento', 'REGION': 'región',
+    'SUPPLIER_NAME': 'proveedor', 'LEAD_TIME': 'tiempo entrega',
+    'FILL_RATE': 'cumplimiento', 'REVENUE_IMPACT': 'impacto ingreso',
+    'RISK_SCORE': 'riesgo', 'AVG_ROAS': 'ROAS', 'SPEND': 'inversión',
+    'AVG_CAC': 'CAC', 'CHANNEL': 'canal', 'CATEGORY': 'categoría',
+    'LOYALTY_TIER': 'tier fidelidad', 'CITY': 'ciudad',
+    'STOCKOUT_EVENTS_CAUSED': 'quiebres', 'FOOT_TRAFFIC': 'tráfico',
+    'CONVERSION_RATE': 'conversión', 'REVENUE_PER_SQFT': 'ingreso/m²',
+  }
+  return map[col] || col.toLowerCase().replace(/_/g, ' ')
+}
+
+function translateLabel(label: string): string {
+  if (label.startsWith('Aisle')) return label.replace('Aisle', 'Pasillo')
+  return label
+}
+
+function formatMetric(val: number, col: string): string {
+  const pctCols = ['CONVERSION', 'FILL_RATE', 'AVG_CHURN', 'MARGIN', 'PROB_FUGA', 'CONVERSION_RATE', 'CHURN_RATE']
+  const currCols = ['REVENUE', 'AVG_CLV', 'CLV', 'INGRESO', 'SPEND', 'REVENUE_IMPACT', 'LEAKAGE', 'CAC', 'AVG_CAC']
+
+  if (pctCols.some(c => col.toUpperCase().includes(c))) {
+    return val < 1 ? `${(val * 100).toFixed(2)}%` : `${val.toFixed(2)}%`
+  }
+  if (currCols.some(c => col.toUpperCase().includes(c))) {
+    return val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString('es-CL', { maximumFractionDigits: 2 })}`
+  }
+  return val.toLocaleString('es-CL', { maximumFractionDigits: 2 })
 }
